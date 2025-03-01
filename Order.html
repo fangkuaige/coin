@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>商品预约</title>
+  <link rel="stylesheet" href="c:\Users\Jackson\Desktop\银行预约\bootstrap-5.1.3-dist\css\bootstrap.css">
+  <script src="c:\Users\Jackson\Desktop\银行预约\bootstrap-5.1.3-dist\js\bootstrap.js"></script>
+  <style>
+    body {
+      background-color: #f7f7f7;
+    }
+
+    /* 滚动信息栏样式 */
+    .scrollbar {
+      background-color: rgba(0, 0, 0, .2);
+      border-bottom: 1px solid #dee2e6;
+      padding: 20px;
+      overflow: hidden;
+      white-space: nowrap;
+      /* 设置较高的z-index值，使其在轮播图上方 */
+      position: absolute;
+      z-index: 1;
+      width: 90%;
+      display: flex;
+      right: 0px;
+    }
+
+    .scrollbar span {
+      font-size: 38px;
+      /* 设置滚动信息栏里的字体大小为18px */
+      color: white;
+      display: inline-block;
+      padding-right: 100%;
+      /* 调整动画初始位置 */
+      animation: marquee 15s linear infinite;
+      transform: translateX(50%);
+    }
+
+    @keyframes marquee {
+      0% {
+        /* 初始位置在滚动栏中心 */
+        transform: translateX(0%);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* 确保滚动信息栏内容始终显示 */
+    .scrollbar span::after {
+      content: attr(data-content);
+      position: absolute;
+      left: 100%;
+    }
+
+    .carousel-item {
+      height: 1000px;
+      /* 设置容器高度为1000px */
+      background-size: cover;
+      /* 确保背景图覆盖整个容器，可能会裁剪图片 */
+      background-position: center;
+      /* 将背景图在容器中居中显示 */
+    }
+
+    /* 自定义轮播指示器样式 */
+    .carousel-indicators {
+      flex-direction: row;
+      /* 改为水平排列 */
+      right: 40px;
+      /* 距离右边20px */
+      bottom: 140px;
+      /* 距离底部20px */
+      left: auto;
+      /* 取消默认的左边定位 */
+      top: auto;
+      /* 取消默认的顶部定位 */
+      margin: 0;
+      /* 取消默认的外边距 */
+      justify-content: flex-end;
+      /* 靠右对齐 */
+    }
+
+    .carousel-indicators button {
+      width: 20px !important;
+      height: 0px !important;
+      opacity: 1 !important;
+      background-clip: border-box !important;
+      margin-left: 15px !important;
+      border-radius: 50%;
+      /* 使指示器变为圆形 */
+      background-color: rgba(255, 255, 255, 0.5);
+      /* 指示器默认背景颜色 */
+      border: none;
+      /* 移除默认边框 */
+      margin: 0 5px;
+      /* 增加指示器之间的水平间距 */
+      transition: border-radius 0.3s ease;
+      /* 添加过渡效果，使形状变化更平滑 */
+    }
+
+    .carousel-indicators button.active {
+      width: 30px !important;
+      border-radius: 20px !important;
+      background-color: #ad1e33;
+    }
+
+    /* 自定义按钮样式 */
+    .custom-btn {
+      width: auto !important;
+      background-color: white;
+      border: 1px solid #ccc;
+      /* 灰色边框 */
+      color: #999;
+      /* 灰色字体 */
+      font-size: 35px;
+      margin-bottom: 20px;
+      border-radius: 30px !important;
+      margin-left: 50px;
+      box-shadow: none !important;
+    }
+
+    .custom-btn:hover {
+      background-color: #ad1e33 !important;
+      color: white !important;
+      border: 1px solid #ad1e33;
+    }
+
+    .clik-btn {
+      font-size: 40px;
+      color: white;
+      width: 100%;
+      height: 120px;
+      border-radius: 60px !important;
+      background-color: #ad1e33;
+      border: 1px solid #ad1e33;
+      box-shadow: none !important;
+    }
+
+    .clik-btn:hover {
+      color: white;
+    }
+
+    /* 设置包裹按钮的 div 样式 */
+    .outer-div {
+      background-color: white;
+      margin-left: 50px;
+      margin-right: 50px;
+      margin-top: 50px;
+      position: relative;
+      z-index: 1;
+      border-radius: 20px;
+      margin-bottom: 60px
+    }
+
+    .btnCange {
+      background-color: #ad1e33 !important;
+      color: white !important;
+      border: 1px solid #ad1e33;
+    }
+
+    .custom-dashed-border {
+      border: 1px dashed #ccc;
+      /* 定义虚线边框 */
+      width: 90%;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .container {
+      display: flex;
+      gap: 80px;
+      justify-content: space-between;
+      max-width: 100%;
+      padding: 30px 50px;
+    }
+
+    .incontainer {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      /* 两列，每列等宽 */
+      justify-items: center;
+      /* 水平居中每个项目 */
+      gap: 0px;
+      /* 设置元素之间的间距 */
+    }
+
+    .fixed-div {
+      position: fixed;
+      background: white;
+      padding: 28px 38px;
+      bottom: 0;
+      width: 100%;
+      z-index: 3;
+      overflow-y: scroll;
+      /* 允许垂直滚动 */
+      max-height: 1000px;
+      /* 设置最大高度 */
+    }
+
+    .messageScroll {
+      background-color: rgba(0, 0, 0, .2);
+      left: 0px;
+      position: absolute;
+      z-index: 1;
+      padding-left: 10px;
+      width: 10%;
+      padding: 20px;
+      height: 98px;
+    }
+
+    .interTitle-div {
+      display: flex;
+      padding-top: 90px;
+    }
+
+    .interTitlePrice-span {
+      font-size: 30px;
+      padding-top: 10px;
+      font-weight: bold;
+      color: #da0c2a;
+    }
+
+    .interTitlePriceNum-span {
+      font-size: 40px;
+      font-weight: bold;
+      color: #da0c2a;
+    }
+
+    .interTitlePriceBook-span {
+      font-size: 30px;
+      align-self: flex-start;
+      position: absolute;
+      right: 40px;
+      color: #999;
+      margin-top: 10px;
+    }
+
+    .interName-div {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+
+    .interName-span {
+      font-size: 48px;
+      margin-left: 50px;
+      font-weight: bold;
+    }
+
+    .dashed-border-div {
+      position: relative;
+      /* padding-top: 30px;
+      margin-top: 20px;
+      margin-bottom: 40px; */
+    }
+
+    .incontainer-Image {
+      width: 60px;
+    }
+
+    .incontainer-span {
+      font-size: 30px;
+      padding-top: 8px;
+    }
+
+    .mt-3 {
+      padding-top: 40px;
+      padding-bottom: 20px;
+    }
+
+    .ProImagediv {
+      width: 200px;
+      height: 200px;
+      background-size: cover;
+      /* 确保背景图覆盖整个容器，可能会裁剪图片 */
+      background-position: center;
+      /* 将背景图在容器中居中显示 */
+      background-image: url(./1000_UYHPZW_CJAXXA.jpg);
+      border-radius: 10px;
+      margin-left: 50px;
+      margin-top: 50px;
+    }
+
+    .form-font {
+      font-size: 35px;
+      color: #999;
+    }
+
+    /* 新增的图片预览样式 */
+    .image-preview-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 4;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-preview {
+      position: absolute;
+      top: -100%;
+      /* 初始位置在顶部之外 */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 80%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: slideDown 0.5s ease forwards;
+      /* 添加动画 */
+    }
+
+    @keyframes slideDown {
+      to {
+        top: 50%;
+        /* 最终位置在屏幕中央 */
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        top: 50%;
+        /* 从顶部开始 */
+      }
+
+      to {
+        top: -100%;
+      }
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+    }
+
+    .increase-div {
+      background-image: url(./ic12.png);
+      background-color: #ad1e33;
+      height: 60px;
+      width: 60px;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .decrease-div {
+      background-image: url(./ic13.png);
+      background-color: #ad1e33;
+      height: 60px;
+      width: 60px;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .number-div {
+      width: 100px;
+      font-size: 32px;
+      text-align: center;
+      margin: 0 10px;
+      box-shadow: none;
+    }
+
+    .form-div {
+      display: flex;
+      justify-content: space-between;
+      padding: 50px 50px;
+    }
+
+    .form-input {
+      width: 100%;
+      font-size: 35px;
+      text-align: right;
+      border: none;
+      box-shadow: none;
+    }
+
+    .ordertip-div {
+      background-color: #ffffff00;
+      margin-top: -30px;
+    }
+
+    .ordertip-span {
+      font-size: 35px;
+      color: #ad1e33
+    }
+  </style>
+</head>
+
+<body>
+  <div style="padding-bottom:150px;">
+    <div class="outer-div">
+      <div style="display: flex;margin-bottom:40px;">
+        <div class="ProImagediv"></div>
+        <div style="display:flex;flex-direction:column;margin-top: 50px;margin-left: 40px;">
+          <div><span style="font-size:40px">2025版百福圆满—杭州分行</span></div>
+          <div class="interTitle-div"><span class="interTitlePrice-span">￥</span><span
+              class="interTitlePriceNum-span">42900</span><span class="interTitlePriceBook-span">可预约 24</span></div>
+        </div>
+      </div>
+
+      <div class="dashed-border-div">
+        <div class="custom-dashed-border"></div>
+      </div>
+      <div class="btn-group-vertical d-flex justify-content-center mt-3" role="group"
+        aria-label="Vertical button group">
+        <button type="button" class="btn custom-btn btnCange">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+        <button type="button" class="btn custom-btn">2025版百福圆满A50 单套装</button>
+      </div>
+      <div class="dashed-border-div">
+        <div class="custom-dashed-border"></div>
+      </div>
+      <div class="container">
+        <div><span class="form-font">预定数量</span></div>
+        <div style="display:flex;">
+          <div class="increase-div">
+          </div>
+          <input type="text" class="form-control number-div" value="1">
+          <div class="decrease-div">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="outer-div">
+      <div class="form-div">
+        <span class="form-font">网点名称</span>
+        <div>
+          <input placeholder="请输入" class="form-control form-input">
+        </div>
+      </div>
+      <div class="dashed-border-div">
+        <div class="custom-dashed-border"></div>
+      </div>
+      <div class="form-div">
+        <span class="form-font">理财经理</span>
+        <div>
+          <input placeholder="请输入" class="form-control form-input">
+        </div>
+      </div>
+      <div class="dashed-border-div">
+        <div class="custom-dashed-border"></div>
+      </div>
+      <div class="form-div">
+        <span class="form-font">理财经理工号</span>
+        <div>
+          <input placeholder="请输入" class="form-control form-input">
+        </div>
+      </div>
+    </div>
+    <div class="outer-div">
+      <div class="form-div">
+        <span class="form-font">客户姓名</span>
+        <div>
+          <input placeholder="请输入" class="form-control form-input">
+        </div>
+      </div>
+      <div class="dashed-border-div">
+        <div class="custom-dashed-border"></div>
+      </div>
+      <div class="form-div">
+        <span class="form-font">身份证后六位</span>
+        <div>
+          <input placeholder="请输入" class="form-control form-input">
+        </div>
+      </div>
+    </div>
+    <div class="outer-div ordertip-div">
+      <span class="ordertip-span">仅限贵宾客户预约，每人仅可预约一次，不可重复操作。</span>
+    </div>
+  </div>
+  <div class="fixed-div">
+    <button type="button" class="btn clik-btn" onclick="window.location.href='./Success.html'">立即预约</button>
+  </div>
+
+  <!-- 新增的图片预览容器 -->
+  <div id="image-preview-overlay" class="image-preview-overlay">
+    <div id="image-preview" class="image-preview"></div>
+  </div>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.custom-btn');
+    buttons.forEach(button => {
+      button.addEventListener('click', function () {
+        // 将所有按钮的背景色变回默认色
+        buttons.forEach(btn => {
+          btn.classList.remove("btnCange") // 变回默认颜色
+        });
+        // 将当前点击的按钮背景色改变
+        this.classList.add("btnCange"); // 例如，改为番茄色
+      });
+    });
+
+    const proImageDivs = document.querySelectorAll('.ProImagediv');
+    const previewOverlay = document.getElementById('image-preview-overlay');
+    const preview = document.getElementById('image-preview');
+
+    proImageDivs.forEach(div => {
+      div.addEventListener('click', function () {
+        const backgroundImage = getComputedStyle(this).backgroundImage;
+        preview.style.backgroundImage = backgroundImage;
+        previewOverlay.style.display = 'flex';
+        preview.style.top = '-100%'; // 重置位置
+        void preview.offsetWidth; // 强制重绘，确保动画可以再次触发
+        preview.style.animation = 'slideDown 0.5s ease forwards';
+      });
+    });
+
+    previewOverlay.addEventListener('click', function () {
+      preview.style.animation = 'slideOut 0.5s ease forwards';
+      this.style.display = 'none';
+    });
+  });
+
+
+</script>
+
+</html>
